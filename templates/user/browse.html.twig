@@ -1,0 +1,19 @@
+{# templates/user/browse.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+{% block body %}
+    <h1>Search </h1>
+    {% for user in users %}
+        <p>
+            <span style="color:deeppink;"><b>Name: </b>{{ user.username }}</span><br>
+            <b>Mail: </b>{{ user.email }}</span><br>
+            <b>Crated: </b>{{ user.date_created }}</span><br>
+
+        </p>
+    {% endfor %}
+{% endblock %}
