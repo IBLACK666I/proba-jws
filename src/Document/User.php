@@ -35,6 +35,7 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     #[MongoDB\Field(name: 'last_active', type: 'date', nullable: true)]
     private ?\DateTimeInterface $lastActive = null;
 
+    // TODO variable names should start with lowercase letters, same as database field name (should be also snake case)
     #[MongoDB\Field(name: 'ResetToken', type: 'string')]
     private ?string $ResetToken = null;
     #[MongoDB\Field(name: 'ResetTokenExpiry', type: 'date')]
