@@ -91,6 +91,7 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
         $this->dateCreated = new \DateTime();
         $this->lastLogin = new \DateTime();
         $this->lastActive = new \DateTime();
+        $this->ResetTokenExpiry = new \DateTime();
     }
     public function getDateCreated(): \DateTimeInterface
     {
@@ -101,12 +102,12 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     {
         $this->dateCreated = $dateCreated;
     }
-    public function getResetTokenExpiry(): \DateTimeInterface
+    public function getResetTokenExpiry(): ?\DateTimeInterface
     {
         return $this->ResetTokenExpiry;
     }
 
-    public function setResetTokenExpiry(\DateTimeInterface $ResetTokenExpiry): void
+    public function setResetTokenExpiry(?\DateTimeInterface $ResetTokenExpiry): void
     {
         $this->ResetTokenExpiry = $ResetTokenExpiry;
     }
