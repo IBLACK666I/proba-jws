@@ -20,6 +20,8 @@ class UserController extends AbstractController
     #[Route('/users/register')]
     public function index(Request $request, PasswordEncoder $passwordEncoder): JsonResponse
     {
+        // TODO remove the method, it's moved to App\Controller\Api\RegisterController
+
         $requestData=json_decode($request->getContent(), true);
         $username = $requestData['username'] ?? null;
         $password = $requestData['password'] ?? null;
@@ -64,12 +66,20 @@ class UserController extends AbstractController
     #[Route('/users/logins')]
     public function login(Request $request, PasswordEncoder $passwordEncoder, JWTTokenManagerInterface $jwtTokenManager): JsonResponse
     {
+        // TODO remove method, all the stuff is already handled by:
+        // 1. \App\Security\Provider\User,
+        // 2. \App\Security\UserChecker (if necessary, you can check any other requirements, such as the expiration date of the user's license),
+        // 3. \App\Security\Encoder\PasswordEncoder
+        // It's all configured at security.yaml
+
         $requestData=json_decode($request->getContent(), true);
         $username = $requestData['username'] ?? null;
         $password = $requestData['password'] ?? null;
+
         $user = $this->documentManager->getRepository(User::class)->findOneBy([
             'username' => $username
         ]);
+
         if ($user) {
             $password2 = $passwordEncoder->encodePassword($password);
             $password3= $user->getPassword();
@@ -87,5 +97,6 @@ class UserController extends AbstractController
             }
         }
         else{return new JsonResponse(['message'=>'no sucha a user'], Response::HTTP_NOT_FOUND);}
+        // TODO don't suggest to anyone that a user doesn't exist in the database
     }
 }
