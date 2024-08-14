@@ -35,10 +35,11 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     #[MongoDB\Field(name: 'last_active', type: 'date', nullable: true)]
     private ?\DateTimeInterface $lastActive = null;
 
-    #[MongoDB\Field(name: 'ResetToken', type: 'string')]
-    private ?string $ResetToken = null;
-    #[MongoDB\Field(name: 'ResetTokenExpiry', type: 'date')]
-    private ?\DateTimeInterface $ResetTokenExpiry;
+    // TODO variable names should start with lowercase letters, same as database field name (should be also snake case)
+    #[MongoDB\Field(name: 'reset_token', type: 'string')]
+    private ?string $resetToken = null;
+    #[MongoDB\Field(name: 'reset_token_expiry', type: 'date')]
+    private ?\DateTimeInterface $resetTokenExpiry;
     public function getUsername(): ?string
     {
         return $this->username;
@@ -79,11 +80,11 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
 
     public function getResetToken(): ?string
     {
-        return $this->ResetToken;
+        return $this->resetToken;
     }
-    public function setResetToken(?string $ResetToken): void
+    public function setResetToken(?string $resetToken): void
     {
-        $this->ResetToken = $ResetToken;
+        $this->resetToken = $resetToken;
     }
 
     public function __construct()
@@ -91,7 +92,7 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
         $this->dateCreated = new \DateTime();
         $this->lastLogin = new \DateTime();
         $this->lastActive = new \DateTime();
-        $this->ResetTokenExpiry = new \DateTime();
+        $this->resetTokenExpiry = new \DateTime();
     }
     public function getDateCreated(): \DateTimeInterface
     {
@@ -104,12 +105,12 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     }
     public function getResetTokenExpiry(): ?\DateTimeInterface
     {
-        return $this->ResetTokenExpiry;
+        return $this->resetTokenExpiry;
     }
 
-    public function setResetTokenExpiry(?\DateTimeInterface $ResetTokenExpiry): void
+    public function setResetTokenExpiry(?\DateTimeInterface $resetTokenExpiry): void
     {
-        $this->ResetTokenExpiry = $ResetTokenExpiry;
+        $this->resetTokenExpiry = $resetTokenExpiry;
     }
 
     public function isActive(): bool
