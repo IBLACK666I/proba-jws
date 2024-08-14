@@ -27,8 +27,9 @@ class RegisterController extends AbstractController
     {
         $requestData = json_decode($request->getContent(), true);
         $username = $requestData['username'] ?? null;
-        $password = $requestData['password'] ?? null;
         $email = trim(  $requestData['email'] ?? '');
+        $password = $requestData['password'] ?? null;
+
         $email_lower = strtolower( $email );
         $username_lower = strtolower( $username );
 
