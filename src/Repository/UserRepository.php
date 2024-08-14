@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Document\User;
-use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use Doctrine\ODM\MongoDB\DocumentManager;
 
-class UserRepository extends DocumentRepository
+class UserRepository extends DocumentManager
 {
     public function findOneByUsername(string $username): ?User
     {

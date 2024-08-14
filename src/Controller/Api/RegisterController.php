@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Document\User;
+use App\Repository\UserRepository;
 use App\Security\Encoder\PasswordEncoder;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Jcupitt\Vips\Image;
@@ -17,7 +18,8 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegisterController extends AbstractController
 {
     public function __construct(
-        private readonly DocumentManager $documentManager
+        private readonly UserRepository $userRepository,
+        private readonly DocumentManager $documentManager,
     ) {}
 
     #[Route('/register')]
@@ -27,13 +29,12 @@ class RegisterController extends AbstractController
         $username = $requestData['username'] ?? null;
         $password = $requestData['password'] ?? null;
         $email = trim(  $requestData['email'] ?? '');
-        $email_lower= strtolower($email);
+        $email_lower = strtolower( $email );
+        $username_lower = strtolower( $username );
 
-        $user = $this->documentManager->getRepository(User::class)->findOneBy([
-                ['username' => $username],
-        ]);
+        $user = $this->userRepository->findOneByUsername($username_lower);
 
-        if (!filter_var($email_lower, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return new JsonResponse([
                 'message' => 'Invalid email address',
             ], Response::HTTP_BAD_REQUEST);
@@ -47,12 +48,12 @@ class RegisterController extends AbstractController
 
         if (null !== $user) {
             return new JsonResponse([
-                'message' => 'This username is already taken.',
+                'message' => 'Username is already taken',
             ], Response::HTTP_BAD_REQUEST);
         }
 
         $user = new User();
-        $user->setUsername(strtolower($username));
+        $user->setUsername($username_lower);
         $user->setEmail($email_lower);
         $user->setPassword($passwordEncoder->encodePassword($password));
         $user->setDateCreated(new \DateTime());
