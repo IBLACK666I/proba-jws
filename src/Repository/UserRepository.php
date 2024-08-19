@@ -19,6 +19,6 @@ class UserRepository extends DocumentRepository
 
     public function findOneByToken(string $token): ?User
     {
-        return $this->findOneBy(['resetTokenExpiry' => $token]);
+        return $this->findOneBy(['resetToken' => $token]);
     }
 }

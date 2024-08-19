@@ -8,6 +8,7 @@ use App\Document\User;
 use App\Repository\UserRepository;
 use App\Service\UserRegisterService;
 use App\Service\UserValidator;
+use App\Service\VerifyEmailService;
 use App\Security\Encoder\PasswordEncoder;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Jcupitt\Vips\Image;
@@ -16,6 +17,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Uid\Uuid;
 
 class RegisterController extends AbstractController
 {
@@ -24,11 +27,13 @@ class RegisterController extends AbstractController
     public function __construct(
         private readonly DocumentManager $documentManager,
         private UserRegisterService $userRegisterService,
-        private UserValidator $userValidator
+        private UserValidator $userValidator,
+        private VerifyEmailService $verifyEmailService
     ) {
         $this->userRepository = $this->documentManager->getRepository(User::class);
         $this->userValidator = $userValidator;
         $this->userRegisterService=$userRegisterService;
+        $this->verifyEmailService=$verifyEmailService;
     }
 
     #[Route('/register')]
@@ -41,7 +46,7 @@ class RegisterController extends AbstractController
 
         $user = $this->userRepository->findOneByUsername($username);
         if(!$this->userValidator->isUsernameAvailable($username)) {
-            return new JsonResponse(['message' => 'Username is not available'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['message' => 'Email is not available'], Response::HTTP_BAD_REQUEST);
         }
         if(!$this->userValidator->validateEmail($email)) {
             return new JsonResponse(['message' => 'Email is not valid'], Response::HTTP_BAD_REQUEST);
@@ -50,9 +55,12 @@ class RegisterController extends AbstractController
             return new JsonResponse(['message' => 'Password must be at least 10 letter long contain upper and lower case letter number and special character'], Response::HTTP_BAD_REQUEST);
         }
 
-        $user = $this->userRegisterService->registerUser($username, $email, $password);
-        // TODO 1. create seperate services with all of the above logic, and pass it to the method by Dependency Injection (UserValidator, UserRegisterService)
-        // TODO 2. send welcome email (with another service)?
+        $verifyToken = Uuid::v4()->toRfc4122();
+
+        $user = $this->userRegisterService->registerUser($username, $email, $password, $verifyToken);
+        $verifyLink = $this->generateUrl('app_verify', ['token' => $verifyToken], UrlGeneratorInterface::ABSOLUTE_URL);
+        $this->verifyEmailService->sendVeifyEmail($email,$verifyLink);
+
         return new JsonResponse([
             'message' => 'User crated successfully',
         ], Response::HTTP_CREATED);

@@ -32,7 +32,6 @@ class ResetController extends AbstractController
         $requestData = json_decode($request->getContent(), true);
         $username = $requestData['username'] ?? null;
 
-        // TODO create UserRepository class with method findOneByUsername(string $username), and change all the places where you want to find the user by username/email address.
         $user = $this->userRepository->findOneByUsername($username);
 
         if (!$user) {

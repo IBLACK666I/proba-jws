@@ -41,6 +41,10 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     private ?string $resetToken = null;
     #[MongoDB\Field(name: 'reset_token_expiry', type: 'date')]
     private ?\DateTimeInterface $resetTokenExpiry;
+
+    #[MongoDB\Field(name: 'verify_token', type: 'string')]
+    private ?string $verifyToken = null;
+
     public function getUsername(): ?string
     {
         return $this->username;
@@ -87,13 +91,22 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     {
         $this->resetToken = $resetToken;
     }
+    public function getVerifyToken(): ?string
+    {
+        return $this->verifyToken;
+    }
+    public function setVerifyToken(?string $verifyToken): void
+    {
+        $this->verifyToken = $verifyToken;
+    }
+
 
     public function __construct()
     {
-        $this->dateCreated = new \DateTime();
-        $this->lastLogin = new \DateTime();
-        $this->lastActive = new \DateTime();
-        $this->resetTokenExpiry = new \DateTime();
+        //$this->dateCreated = new \DateTime();
+        //$this->lastLogin = new \DateTime();
+        //$this->lastActive = new \DateTime();
+        //$this->resetTokenExpiry = new \DateTime();
     }
     public function getDateCreated(): \DateTimeInterface
     {
@@ -113,6 +126,8 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     {
         $this->resetTokenExpiry = $resetTokenExpiry;
     }
+
+
 
     public function isActive(): bool
     {

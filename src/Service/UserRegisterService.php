@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use App\Security\Encoder\PasswordEncoder;
 use Doctrine\ODM\MongoDB\DocumentManager;
 
+
 class UserRegisterService
 {
     private UserRepository $userRepository;
@@ -21,16 +22,16 @@ class UserRegisterService
         $this->documentManager = $documentManager;
     }
 
-    public function registerUser(string $username, string $email, string $password): User
+    public function registerUser(string $username, string $email, string $password, string $verifyToken): User
     {
         $user = new User();
         $user->setUsername($username);
         $user->setEmail($email);
         $user->setPassword($this->passwordEncoder->encodePassword($password));
         $user->setDateCreated(new \DateTime());
-        $user->setActive(true);
-        $user->setLastLogin(new \DateTime());
-        $user->setLastActive(new \DateTime());
+        $user->setVerifyToken($verifyToken);
+        $user->setActive(false);
+
 
         $this->documentManager->persist($user);
         $this->documentManager->flush();
