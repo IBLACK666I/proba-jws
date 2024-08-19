@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Document;
 
+use App\Repository\UserRepository;
 use DateTimeInterface;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use MongoDB\BSON\UTCDateTime;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-#[MongoDB\Document(collection: 'users')]
+#[MongoDB\Document(collection: 'users', repositoryClass: UserRepository::class)]
 class User extends Base implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[MongoDB\Field(name: 'username', type: 'string')]
@@ -96,7 +97,7 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     }
     public function getDateCreated(): \DateTimeInterface
     {
-    return $this->dateCreated;
+        return $this->dateCreated;
     }
 
     public function setDateCreated(\DateTimeInterface $dateCreated): void

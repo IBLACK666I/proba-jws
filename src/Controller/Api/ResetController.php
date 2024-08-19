@@ -18,10 +18,13 @@ use Symfony\Component\Uid\Uuid;
 
 class ResetController extends AbstractController
 {
+    private UserRepository $userRepository;
+
     public function __construct(
-        private readonly UserRepository $userRepository,
         private readonly DocumentManager $documentManager,
-    ){}
+    ) {
+        $this->userRepository = $this->documentManager->getRepository(User::class);
+    }
 
     #[Route('/users/request-reset-password')]
     public function requestResetPassword(Request $request, MailerInterface $mailer): JsonResponse
