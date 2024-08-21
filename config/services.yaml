@@ -49,3 +49,11 @@ services:
 
     app.service.encoder.passwordencoder:
         class: App\Security\Encoder\PasswordEncoder
+
+    app.eventlistener.jwtrefreshlistiner:
+        class: App\EventListener\JWTRefreshListener
+        arguments:
+            - '@doctrine_mongodb.odm.document_manager'
+            - '@security.token_storage'
+        tags:
+            - { name: 'kernel.event_subscriber' }

@@ -23,13 +23,14 @@ class RegisterverifyController extends AbstractController
     ) {
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
-    #[Route('/verify/{token}', name: 'app_verify')]
+    #[Route('/api/verify/{token}', name: 'app_verify')]
     public function registerVerify(Request $request, string $token): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
         $use = $requestData['use'] ?? null;
-        $user = $this->userRepository->findOneByToken($token);
 
+        $user = $this->userRepository->findOneByTokenVerify($token);
+        //return new JsonResponse(['token'=>$token]);
         if($user === null) {
             return new JsonResponse(['message' => 'Check link'], Response::HTTP_NOT_FOUND);
         }

@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Document;
 
 use App\Repository\UserRepository;
-use DateTimeInterface;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
-use MongoDB\BSON\UTCDateTime;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -125,13 +123,6 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     public function setResetTokenExpiry(?\DateTimeInterface $resetTokenExpiry): void
     {
         $this->resetTokenExpiry = $resetTokenExpiry;
-    }
-
-
-
-    public function isActive(): bool
-    {
-        return $this->active;
     }
 
     public function setActive(bool $active): void

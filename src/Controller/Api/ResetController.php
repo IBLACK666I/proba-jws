@@ -26,7 +26,7 @@ class ResetController extends AbstractController
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
 
-    #[Route('/users/request-reset-password')]
+    #[Route('/api/request-reset-password')]
     public function requestResetPassword(Request $request, MailerInterface $mailer): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);

@@ -31,12 +31,9 @@ class RegisterController extends AbstractController
         private VerifyEmailService $verifyEmailService
     ) {
         $this->userRepository = $this->documentManager->getRepository(User::class);
-        $this->userValidator = $userValidator;
-        $this->userRegisterService=$userRegisterService;
-        $this->verifyEmailService=$verifyEmailService;
     }
 
-    #[Route('/register')]
+    #[Route('api/register')]
     public function index(Request $request, PasswordEncoder $passwordEncoder): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);

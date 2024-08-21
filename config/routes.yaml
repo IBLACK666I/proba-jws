@@ -12,3 +12,5 @@ api_login_check:
 welcome:
     path: /api/welcome
     controller: App\Controller\WelcomeController::welcome
+api_refresh_token:
+    path: /api/token/refresh

@@ -10,13 +10,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProfileController extends AbstractController
 {
-    #[Route('/profile')]
+    #[Route('api/profile')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(): JsonResponse
     {
         $user = $this->getUser();
-        //dd($user);
-        return new JsonResponse(['username' => $user->getUserIdentifier()]);
+        dd($user);
+        //return new JsonResponse(['username' => $user->getUserIdentifier()]);
 
     }
 }
