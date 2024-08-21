@@ -1,21 +1,25 @@
 <?php
 declare(strict_types=1);
-// src/EventListener/JWTRefreshListener.php
 namespace App\EventListener;
 
+use App\Document\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Gesdinet\JWTRefreshTokenBundle\Event\RefreshEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+
 class JWTRefreshListener implements EventSubscriberInterface
 {
-    private $documentManager;
+    private UserRepository $userRepository;
     private TokenStorageInterface $tokenStorage;
 
-    public function __construct(DocumentManager $documentManager, TokenStorageInterface $tokenStorage)//, Security $security)
+    public function __construct(
+        private readonly DocumentManager $documentManager,
+        TokenStorageInterface $tokenStorage)//, Security $security)
     {
-        $this->documentManager = $documentManager;
+        $this->userRepository = $this->documentManager->getRepository(User::class);
+        //$this->documentManager = $documentManager;
         $this->tokenStorage = $tokenStorage;
 
     }
@@ -27,12 +31,12 @@ class JWTRefreshListener implements EventSubscriberInterface
         ];
     }
 
-    public function onJWTRefresh(RefreshEvent $event)
+    public function onJWTRefresh(RefreshEvent $event): void
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $username = $this->tokenStorage->getToken()->getUserIdentifier();
+        $user = $this->userRepository->findOneByUsername($username);
         if ($user) {
             $user->setLastLogin(new \DateTime());
-            $this->documentManager->persist($user);
             $this->documentManager->flush();
         }
     }

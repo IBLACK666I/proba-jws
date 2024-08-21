@@ -57,3 +57,9 @@ services:
             - '@security.token_storage'
         tags:
             - { name: 'kernel.event_subscriber' }
+
+    api.event.jwt_decoded_listener:
+        class: App\EventListener\JWTDecodedListener
+        arguments: [ '@doctrine_mongodb.odm.document_manager' ]
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_decoded, method: onJWTDecoded }
