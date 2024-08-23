@@ -22,7 +22,8 @@ class ResetController extends AbstractController
 
     public function __construct(
         private readonly DocumentManager $documentManager,
-    ) {
+    )
+    {
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
 
@@ -31,8 +32,8 @@ class ResetController extends AbstractController
     {
         $requestData = json_decode($request->getContent(), true);
         $username = $requestData['username'] ?? null;
-        if($username===null){
-            return new JsonResponse(['message'=>'Input your username first'], Response::HTTP_BAD_REQUEST);
+        if ($username === null) {
+            return new JsonResponse(['message' => 'Input your username first'], Response::HTTP_BAD_REQUEST);
         }
         $user = $this->userRepository->findOneByUsername($username);
 

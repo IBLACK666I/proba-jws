@@ -68,3 +68,8 @@ services:
     arguments: [ '@doctrine_mongodb.odm.document_manager' ]
     tags:
       - { name: kernel.event_listener, event: security.interactive_login, method: onLogin }
+  app.reset_password_service:
+    class: App\Service\ResetPasswordService
+    arguments:
+      - '@doctrine_mongodb.odm.document_manager'
+      - '@app.password_encoder'
