@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Document\User;
-use App\Service\UserValidator;
 use App\Repository\UserRepository;
 use App\Security\Encoder\PasswordEncoder;
 use App\Service\UserRegisterService;
@@ -18,7 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class ResetChangeController extends AbstractController
 {
     private UserRepository $userRepository;
-    private UserValidator $userValidator;
 
     public function __construct(
         private readonly DocumentManager $documentManager,
@@ -38,8 +36,10 @@ class ResetChangeController extends AbstractController
         if ($password != $password_confirmation) {
             return new JsonResponse(['message' => 'Passwords must match.'], Response::HTTP_BAD_REQUEST);
         }
-        if(!$this->userValidator->validatePassword($password)){
-            return new JsonResponse(['message' => 'Password must be at least 10 letter long contain upper and lower case letter number and special character'], Response::HTTP_BAD_REQUEST);
+        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/', $password)) {
+            return new JsonResponse([
+                'message' => 'Password must be at least 10 characters long and contain at least one lowercase letter, one uppercase letter, one digit, and one special character',
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         $user = $this->userRepository->findOneByToken($token);

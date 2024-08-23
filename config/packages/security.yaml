@@ -40,6 +40,7 @@ security:
         - { path: api/request-reset-password, roles: PUBLIC_ACCESS}
         - { path: /api/verify, roles: PUBLIC_ACCESS }
         - { path: /api/reset-password, roles: PUBLIC_ACCESS}
+        - { path: /api/request-reset-password, roles: PUBLIC_ACCESS}
         - { path: ^/api/token/refresh, roles: IS_AUTHENTICATED_FULLY}
         - { path: ^/api/(login|token/refresh), roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
