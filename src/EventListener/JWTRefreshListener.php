@@ -35,6 +35,7 @@ class JWTRefreshListener implements EventSubscriberInterface
     {
         $username = $this->tokenStorage->getToken()->getUserIdentifier();
         $user = $this->userRepository->findOneByUsername($username);
+        dd($user);
         if ($user) {
             $user->setLastLogin(new \DateTime());
             $this->documentManager->flush();

@@ -59,7 +59,7 @@ class RegisterController extends AbstractController
         $this->verifyEmailService->sendVeifyEmail($email,$verifyLink);
 
         return new JsonResponse([
-            'message' => 'User crated successfully',
+            'message' => 'Verificatino email was sent',
         ], Response::HTTP_CREATED);
     }
 }

@@ -31,7 +31,9 @@ class ResetController extends AbstractController
     {
         $requestData = json_decode($request->getContent(), true);
         $username = $requestData['username'] ?? null;
-
+        if($username===null){
+            return new JsonResponse(['message'=>'Input your username first'], Response::HTTP_BAD_REQUEST);
+        }
         $user = $this->userRepository->findOneByUsername($username);
 
         if (!$user) {
