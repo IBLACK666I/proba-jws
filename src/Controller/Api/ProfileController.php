@@ -12,7 +12,8 @@ class ProfileController extends AbstractController
 {
     #[Route('api/profile')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function index(): JsonResponse {
+    public function index(): JsonResponse
+    {
         $user = $this->getUser();
         dd($user);
     }

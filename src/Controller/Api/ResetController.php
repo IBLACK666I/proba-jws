@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 
@@ -22,7 +21,7 @@ class ResetController extends AbstractController
     private UserRepository $userRepository;
 
     public function __construct(
-        private readonly DocumentManager $documentManager,
+        private readonly DocumentManager   $documentManager,
         private readonly ResetEmailService $resetEmailService,
     )
     {

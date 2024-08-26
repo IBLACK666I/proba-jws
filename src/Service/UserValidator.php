@@ -1,11 +1,12 @@
 <?php
-// src/Service/UserValidator.php
 
 namespace App\Service;
+
 use App\Document\User;
 use App\Repository\UserRepository;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Jcupitt\Vips\Image;
+
 class UserValidator
 {
     private UserRepository $userRepository;
@@ -17,8 +18,9 @@ class UserValidator
 
     public function isUsernameAvailable(string $username): bool
     {
-            return null === $this->userRepository->findOneByUsername($username);
-  }
+        return null === $this->userRepository->findOneByUsername($username);
+    }
+
     public function validateEmail(string $email): bool
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
@@ -28,6 +30,4 @@ class UserValidator
     {
         return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/', $password);
     }
-
-
 }

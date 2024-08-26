@@ -1,5 +1,4 @@
 <?php
-// src/Service/UserRegisterService.php
 
 namespace App\Service;
 
@@ -7,7 +6,6 @@ use App\Document\User;
 use App\Repository\UserRepository;
 use App\Security\Encoder\PasswordEncoder;
 use Doctrine\ODM\MongoDB\DocumentManager;
-
 
 class UserRegisterService
 {
@@ -31,11 +29,8 @@ class UserRegisterService
         $user->setDateCreated(new \DateTime());
         $user->setVerifyToken($verifyToken);
         $user->setActive(false);
-
-
         $this->documentManager->persist($user);
         $this->documentManager->flush();
-
         return $user;
     }
 }

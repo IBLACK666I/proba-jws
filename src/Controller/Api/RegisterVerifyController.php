@@ -21,11 +21,14 @@ class RegisterVerifyController extends AbstractController
     public function __construct(
         private readonly DocumentManager $documentManager,
         private UserRegisterService      $userRegisterService
-    ){
+    )
+    {
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
+
     #[Route('/api/verify/{token}', name: 'app_verify')]
-    public function registerVerify(Request $request, string $token): JsonResponse {
+    public function registerVerify(Request $request, string $token): JsonResponse
+    {
         $user = $this->userRepository->findOneByTokenVerify($token);
         if ($user === null) {
             return new JsonResponse(['message' => 'Check link'], Response::HTTP_NOT_FOUND);
