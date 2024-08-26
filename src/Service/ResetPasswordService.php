@@ -1,6 +1,5 @@
 <?php
 namespace App\Service;
-
 use App\Document\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Repository\UserRepository;
@@ -13,9 +12,7 @@ class ResetPasswordService
     public function __construct(
         PasswordEncoder $passwordEncoder,
         DocumentManager $documentManager,
-        UserValidator $userValidator
-    )
-    {
+    ){
         $this->userRepository = $documentManager->getRepository(User::class);
         $this->passwordEncoder = $passwordEncoder;
         $this->documentManager = $documentManager;

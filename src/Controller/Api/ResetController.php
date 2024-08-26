@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 
 use App\Document\User;
 use App\Repository\UserRepository;
+use App\Service\ResetEmailService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,6 +23,7 @@ class ResetController extends AbstractController
 
     public function __construct(
         private readonly DocumentManager $documentManager,
+        private readonly ResetEmailService $resetEmailService,
     )
     {
         $this->userRepository = $this->documentManager->getRepository(User::class);
@@ -36,26 +38,15 @@ class ResetController extends AbstractController
             return new JsonResponse(['message' => 'Input your username first'], Response::HTTP_BAD_REQUEST);
         }
         $user = $this->userRepository->findOneByUsername($username);
-
         if (!$user) {
             return new JsonResponse(['message' => 'Check if email is correct'], Response::HTTP_BAD_REQUEST);
         }
-
         $resetToken = Uuid::v4()->toRfc4122();
         $user->setResetToken($resetToken);
         $user->setResetTokenExpiry((new \DateTime())->modify('+1 hour'));
         $this->documentManager->flush();
-
         $resetLink = $this->generateUrl('app_reset_resetpassword', ['token' => $resetToken], UrlGeneratorInterface::ABSOLUTE_URL);
-
-        $email = (new Email())
-            ->from('no-reply@example.com')
-            ->to($user->getEmail())
-            ->subject('Password Reset Request')
-            ->html("<p>To reset your password, please click the link below:</p><p><a href=\"$resetLink\">Reset Password</a></p>");
-
-        $mailer->send($email);
-
+        $this->resetEmailService->sendPassResetEmail($user->getEmail(), $resetLink);
         return new JsonResponse(['email' => $user->getEmail(), 'message' => 'Password reset email sent'], Response::HTTP_OK);
     }
 }
