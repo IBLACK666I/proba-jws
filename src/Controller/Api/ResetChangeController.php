@@ -5,7 +5,6 @@ namespace App\Controller\Api;
 
 use App\Document\User;
 use App\Repository\UserRepository;
-use App\Security\Encoder\PasswordEncoder;
 use App\Service\ResetPasswordService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +24,7 @@ class ResetChangeController extends AbstractController
     }
 
     #[Route('/api/reset-password/{token}', name: 'app_reset_resetpassword')]
-    public function resetPassword(Request $request, string $token, PasswordEncoder $passwordEncoder): JsonResponse
+    public function resetPassword(Request $request, string $token): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
         $password = $requestData['password'] ?? null;
