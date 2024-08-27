@@ -22,7 +22,6 @@ class ResetChangeController extends AbstractController
     {
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
-
     #[Route('/api/reset-password/{token}', name: 'app_reset_resetpassword')]
     public function resetPassword(Request $request, string $token): JsonResponse
     {
