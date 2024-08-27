@@ -10,7 +10,9 @@ readonly class JWTDecodedListener
 {
     public function __construct(
         private DocumentManager $documentManager,
-    ) {}
+    )
+    {
+    }
 
     public function onJWTDecoded(JWTDecodedEvent $event): void
     {
