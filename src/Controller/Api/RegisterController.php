@@ -31,6 +31,6 @@ class RegisterController extends AbstractController
         $requestData = json_decode($request->getContent(), true);
         $email = trim($requestData['email'] ?? '');
         $password = $requestData['password'] ?? null;
-        return $this->emailAndDataService->sendVeifyEmail($email, $password);
+        return $this->emailAndDataService->sendVerifyEmail($email, $password);
     }
 }

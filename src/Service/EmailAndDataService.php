@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Document\User;
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,7 +50,7 @@ class EmailAndDataService
 
         $resetToken = Uuid::v4()->toRfc4122();
         $user->setResetToken($resetToken);
-        $user->setResetTokenExpiry((new \DateTime())->modify('+1 hour'));
+        $user->setResetTokenExpiry((new DateTime())->modify('+1 hour'));
         $this->documentManager->flush();
         $resetLink = $this->urlGenerator->generate('app_reset_resetpassword', ['token' => $resetToken], UrlGeneratorInterface::ABSOLUTE_URL);
 
@@ -70,7 +71,7 @@ class EmailAndDataService
         } else {
             $user->setActive(true);
             $user->setVerifyToken(null);
-            $user->setLastActive(new \DateTime());
+            $user->setLastActive(new DateTime());
             $this->documentManager->flush();
             return new JsonResponse(['message' => 'Account is now created and verified '], Response::HTTP_OK);
         }
@@ -89,10 +90,11 @@ class EmailAndDataService
             return new JsonResponse(['message' => 'Passwords must match.'], Response::HTTP_BAD_REQUEST);
         }
         $expdat = $user->getResetTokenExpiry();
-        if ($expdat < new \DateTime()) {
+        if ($expdat < new DateTime()) {
             $user->setResetToken(null);
             $user->setResetTokenExpiry(null);
             $this->documentManager->flush();
+            return new JsonResponse(['message' => 'Token expired'], Response::HTTP_OK);
         } else {
             $user->setPassword($this->passwordEncoder->encodePassword($password));
             $user->setResetToken(null);
@@ -108,7 +110,7 @@ class EmailAndDataService
         $user->setUsername($username);
         $user->setEmail($email);
         $user->setPassword($this->passwordEncoder->encodePassword($password));
-        $user->setDateCreated(new \DateTime());
+        $user->setDateCreated(new DateTime());
         $user->setVerifyToken($verifyToken);
         $user->setActive(false);
         $this->documentManager->persist($user);
@@ -116,7 +118,7 @@ class EmailAndDataService
         return $user;
     }
 
-    public function sendVeifyEmail(string $email, string $password): JsonResponse
+    public function sendVerifyEmail(string $email, string $password): JsonResponse
     {
         $username = strtolower($email);
         //$user = $this->userRepository->findOneByEmail($email);
@@ -130,7 +132,7 @@ class EmailAndDataService
             return new JsonResponse(['message' => 'Password must be at least 10 letter long contain upper and lower case letter number and special character'], Response::HTTP_BAD_REQUEST);
         }
         $verifyToken = Uuid::v4()->toRfc4122();
-        $user = $this->registerUser($username, $email, $password, $verifyToken);
+        $this->registerUser($username, $email, $password, $verifyToken);
         $verifyLink = $this->urlGenerator->generate('app_verify', ['token' => $verifyToken], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $email_send = (new Email())
