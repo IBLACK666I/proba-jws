@@ -9,25 +9,26 @@ use App\Service\EmailAndDataService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
-class ResetController extends AbstractController
+class ResetChangeController extends AbstractController
 {
     private UserRepository $userRepository;
 
     public function __construct(
-        private readonly DocumentManager     $documentManager,
-        private readonly EmailAndDataService $emailAndDataService)
+        private readonly DocumentManager $documentManager,
+        private EmailAndDataService      $emailAndDataService)
     {
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
 
-    #[Route('/api/request-reset-password')]
-    public function requestResetPassword(Request $request): JsonResponse
+    #[Route('/api/reset-password/{token}', name: 'app_reset_resetpassword')]
+    public function resetPassword(Request $request, string $token): JsonResponse
     {
         $requestData = json_decode($request->getContent(), true);
-        $username = $requestData['username'] ?? null;
-        return $this->emailAndDataService->sendPassResetEmail($username);
+        $password = $requestData['password'] ?? null;
+        $password_confirmation = $requestData['password2'] ?? null;
+        return $this->emailAndDataService->resetPassword($token, $password, $password_confirmation);
     }
 }

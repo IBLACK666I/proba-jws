@@ -4,9 +4,9 @@ namespace App\EventListener;
 
 use App\Document\User;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-readonly class JWTDecodedListener
+readonly class LoginListener
 {
     public function __construct(
         private DocumentManager $documentManager,
@@ -14,12 +14,14 @@ readonly class JWTDecodedListener
     {
     }
 
-    public function onJWTDecoded(JWTDecodedEvent $event): void
+    public function onLogin(InteractiveLoginEvent $event): void
     {
-        $username = $event->getPayload()['username'] ?? '';
+        $token = $event->getAuthenticationToken();
+        $username = $token->getUser()->getUsername();
         $user = $this->documentManager->getRepository(User::class)->findOneByUsername($username);
 
         if ($user) {
+            $user->setLastLogin(new \DateTime());
             $user->setLastActive(new \DateTime());
             $this->documentManager->flush();
         }

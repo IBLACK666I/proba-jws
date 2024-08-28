@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Document\User;
@@ -16,10 +17,9 @@ class JWTRefreshListener implements EventSubscriberInterface
 
     public function __construct(
         private readonly DocumentManager $documentManager,
-        TokenStorageInterface $tokenStorage)//, Security $security)
+        TokenStorageInterface            $tokenStorage)
     {
         $this->userRepository = $this->documentManager->getRepository(User::class);
-        //$this->documentManager = $documentManager;
         $this->tokenStorage = $tokenStorage;
 
     }
@@ -36,7 +36,7 @@ class JWTRefreshListener implements EventSubscriberInterface
         $username = $this->tokenStorage->getToken()->getUserIdentifier();
         $user = $this->userRepository->findOneByUsername($username);
         if ($user) {
-            $user->setLastLogin(new \DateTime());
+            $user->setLastActive(new \DateTime());
             $this->documentManager->flush();
         }
     }

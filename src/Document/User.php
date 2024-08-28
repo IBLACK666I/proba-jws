@@ -15,13 +15,11 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     #[MongoDB\Field(name: 'username', type: 'string')]
     private ?string $username = null;
 
-    #[MongoDB\Field(name: 'firstname', type: 'string')]
-    private ?string $firstname = null;
-
-    #[MongoDB\Field(name: 'password', type: 'string')]
-    private string $password;
     #[MongoDB\Field(name: 'email', type: 'string')]
     private ?string $email = null;
+    #[MongoDB\Field(name: 'password', type: 'string')]
+    private string $password;
+
     #[MongoDB\Field(name: 'date_created', type: 'date')]
     private ?\DateTimeInterface $dateCreated;
 
@@ -51,16 +49,6 @@ class User extends Base implements UserInterface, PasswordAuthenticatedUserInter
     public function setUsername(?string $username): void
     {
         $this->username = $username;
-    }
-
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(?string $firstname): void
-    {
-        $this->firstname = $firstname;
     }
 
     public function getPassword(): string

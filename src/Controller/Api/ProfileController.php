@@ -16,7 +16,5 @@ class ProfileController extends AbstractController
     {
         $user = $this->getUser();
         dd($user);
-        //return new JsonResponse(['username' => $user->getUserIdentifier()]);
-
     }
 }

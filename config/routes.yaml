@@ -1,17 +1,20 @@
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
 
-#api_login_check:
- #   path: /api/login_check
+  #api_login_check:
+  #   path: /api/login_check
 api_login_check:
-    path: /api/login_check
-    controller: lexik_jwt_authentication.security.guard.jwt_token_authenticator
+  path: /api/login_check
+  controller: lexik_jwt_authentication.security.guard.jwt_token_authenticator
 welcome:
-    path: /api/welcome
-    controller: App\Controller\WelcomeController::welcome
+  path: /api/welcome
+  controller: App\Controller\WelcomeController::welcome
 api_refresh_token:
-    path: /api/token/refresh
-    controller: gesdinet.jwtrefreshtoken::refresh
+  path: /api/token/refresh
+  controller: gesdinet.jwtrefreshtoken::refresh
+  #api_register_verify:
+  #   path: /api/api/verify/{token}
+  #controller: App\Controller\Api\RegisterverifyController::registerVerify
