@@ -5,7 +5,7 @@ namespace App\Controller\Api;
 
 use App\Document\User;
 use App\Repository\UserRepository;
-use App\Service\VerifyEmailService;
+use App\Service\EmailAndDataService;
 use App\Security\Encoder\PasswordEncoder;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Jcupitt\Vips\Image;
@@ -20,8 +20,7 @@ class RegisterController extends AbstractController
 
     public function __construct(
         private readonly DocumentManager $documentManager,
-        private VerifyEmailService       $verifyEmailService
-    )
+        private EmailAndDataService      $emailAndDataService)
     {
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
@@ -32,6 +31,6 @@ class RegisterController extends AbstractController
         $requestData = json_decode($request->getContent(), true);
         $email = trim($requestData['email'] ?? '');
         $password = $requestData['password'] ?? null;
-        return $this->verifyEmailService->sendVeifyEmail($email, $password);
+        return $this->emailAndDataService->sendVeifyEmail($email, $password);
     }
 }

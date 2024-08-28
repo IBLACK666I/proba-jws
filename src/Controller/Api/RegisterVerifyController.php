@@ -5,7 +5,7 @@ namespace App\Controller\Api;
 
 use App\Document\User;
 use App\Repository\UserRepository;
-use App\Service\ActivateUserService;
+use App\Service\EmailAndDataService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,8 +18,7 @@ class RegisterVerifyController extends AbstractController
 
     public function __construct(
         private readonly DocumentManager $documentManager,
-        private ActivateUserService      $activateUserService
-    )
+        private EmailAndDataService      $emailAndDataService)
     {
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
@@ -27,6 +26,6 @@ class RegisterVerifyController extends AbstractController
     #[Route('/api/verify/{token}', name: 'app_verify')]
     public function registerVerify(Request $request, string $token): JsonResponse
     {
-        return $this->activateUserService->ActivateUser($token);
+        return $this->emailAndDataService->ActivateUser($token);
     }
 }

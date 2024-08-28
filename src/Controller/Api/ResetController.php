@@ -5,23 +5,20 @@ namespace App\Controller\Api;
 
 use App\Document\User;
 use App\Repository\UserRepository;
-use App\Service\ResetEmailService;
+use App\Service\EmailAndDataService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
-
 
 class ResetController extends AbstractController
 {
     private UserRepository $userRepository;
 
     public function __construct(
-        private readonly DocumentManager   $documentManager,
-        private readonly ResetEmailService $resetEmailService,
-    )
+        private readonly DocumentManager     $documentManager,
+        private readonly EmailAndDataService $emailAndDataService)
     {
         $this->userRepository = $this->documentManager->getRepository(User::class);
     }
@@ -31,6 +28,6 @@ class ResetController extends AbstractController
     {
         $requestData = json_decode($request->getContent(), true);
         $username = $requestData['username'] ?? null;
-        return $this->resetEmailService->sendPassResetEmail($username);
+        return $this->emailAndDataService->sendPassResetEmail($username);
     }
 }
